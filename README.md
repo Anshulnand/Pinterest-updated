@@ -102,3 +102,65 @@ A full-featured Pinterest Clone built using **Next.js**, **Firebase**, **NextAut
    ```
 
 ---
+
+## 🚀 Deployment on Vercel
+
+### Prerequisites
+
+1. **Environment Variables** - Set these in your Vercel project settings:
+
+   - `GOOGLE_CLIENT_ID` - Your Google OAuth Client ID
+   - `GOOGLE_CLIENT_SECRET` - Your Google OAuth Client Secret
+   - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
+   - `NEXTAUTH_URL` - Your deployed Vercel URL (e.g., `https://your-app.vercel.app`)
+
+2. **Firebase Configuration** - Ensure your Firebase config is properly set up in your codebase
+
+### Deployment Steps
+
+1. **Push to GitHub**
+
+   ```bash
+   git add .
+   git commit -m "Production ready"
+   git push origin main
+   ```
+
+2. **Deploy on Vercel**
+
+   - Go to [vercel.com](https://vercel.com)
+   - Click "Add New Project"
+   - Import your GitHub repository
+   - Add environment variables in the project settings
+   - Click "Deploy"
+
+3. **Post-Deployment**
+
+   - Update your Google OAuth redirect URIs to include your Vercel domain
+   - Test authentication flow
+   - Verify image uploads work with Firebase Storage
+
+### Build Configuration
+
+The project includes a `vercel.json` file with optimized settings:
+- Automatic build detection
+- Next.js framework detection
+- Production-ready configuration
+
+---
+
+## 📝 Environment Variables Reference
+
+Copy `.env.example` to `.env.local` for local development:
+
+```bash
+cp .env.example .env.local
+```
+
+Required variables:
+- `GOOGLE_CLIENT_ID` - Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+- `NEXTAUTH_SECRET` - Secret for NextAuth session encryption
+- `NEXTAUTH_URL` - Full URL of your application
+
+---

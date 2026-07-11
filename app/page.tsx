@@ -9,6 +9,8 @@ import PinList from './../components/Pins/PinList'
 import { useSearchParams } from 'next/navigation'
 import Sidebar from './../components/Sidebar'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   const db = getFirestore(app);
   const [listOfPins, setListOfPins] = useState<any[]>([]);
