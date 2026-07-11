@@ -4,11 +4,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "env": {
-    "NEXTAUTH_URL": {
-      "description": "The URL of your deployed application",
-      "value": "https://your-app.vercel.app"
-    }
-  }
+  "regions": ["iad1"]
 }
