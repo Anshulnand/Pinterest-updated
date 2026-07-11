@@ -59,55 +59,61 @@ const [link, setLink] = useState("");
   };
 
   return (
-    <div className=" bg-white p-16 rounded-2xl ">
-      <div className="flex justify-end mb-6">
+    <div className="bg-white rounded-2xl shadow-lg">
+      <div className="flex justify-between items-center p-4 border-b">
+        <h1 className="text-xl font-bold">Create Pin</h1>
         <button
           onClick={() => onSave()}
-          className="bg-red-500 p-2
-            text-white font-semibold px-3 
-            rounded-lg"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-full transition"
         >
           {loading ? (
             <Image
               src="/loading-indicator.png"
-              width={30}
-              height={30}
+              width={20}
+              height={20}
               alt="loading"
               className="animate-spin"
             />
           ) : (
-            <span>Save</span>
+            <span>Publish</span>
           )}
         </button>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
         <UploadImage setFile={(file) => setFile(file)} />
 
-        <div className="col-span-2">
-          <div className="w-[100%]">
-          <input
-  type="text"
-  placeholder="Add your title"
-  onChange={(e) => setTitle(e.target.value)} // This should update the title state correctly
-  className="text-[35px] outline-none font-bold w-full border-b-[2px] border-gray-400 placeholder-gray-400"
-/>
-
-            <h2 className="text-[12px] mb-8 w-full  text-gray-400">
-              The first 40 Charaters are what usually show up in feeds
-            </h2>
+        <div className="flex flex-col">
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Add your title"
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-2xl font-bold w-full outline-none placeholder-gray-400 border-b-2 border-gray-200 focus:border-gray-400 pb-2"
+            />
+            <p className="text-xs text-gray-400 mt-2">
+              The first 40 characters are what usually show up in feeds
+            </p>
+          </div>
+          
+          <div className="mb-6">
             <UserTag user={session?.user} />
-          <textarea
-  type="text"
-  onChange={(e) => setDesc(e.target.value)} // This should update the desc state correctly
-  placeholder="Tell everyone what your pin is about"
-  className="outline-none w-full mt-8 pb-4 text-[14px] border-b-[2px] border-gray-400 placeholder-gray-400"
-/>
-           <input
-  type="text"
-  onChange={(e) => setLink(e.target.value)} // This should update the link state correctly
-  placeholder="Add a Destination Link"
-  className="outline-none w-full pb-4 mt-[90px] border-b-[2px] border-gray-400 placeholder-gray-400"
-/>
+          </div>
+          
+          <div className="mb-6">
+            <textarea
+              onChange={(e) => setDesc(e.target.value)}
+              placeholder="Tell everyone what your pin is about"
+              className="w-full outline-none text-sm placeholder-gray-400 border-b-2 border-gray-200 focus:border-gray-400 pb-2 resize-none h-24"
+            />
+          </div>
+          
+          <div className="mb-6">
+            <input
+              type="text"
+              onChange={(e) => setLink(e.target.value)}
+              placeholder="Add a destination link"
+              className="w-full outline-none text-sm placeholder-gray-400 border-b-2 border-gray-200 focus:border-gray-400 pb-2"
+            />
           </div>
         </div>
       </div>

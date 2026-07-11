@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import app from '../Shared/firebaseConfig';
 import UserInfo from '../../components/UserInfo';
 import PinList from '../../components/Pins/PinList';
+import Sidebar from '../../components/Sidebar';
 import { collection, getDocs, getDoc, doc, getFirestore, query, where } from 'firebase/firestore';
 
 export default function Profile({ params }) {
@@ -51,15 +52,22 @@ export default function Profile({ params }) {
   }, [userInfo, db]);
 
   return (
-    <div>
-      {userInfo ? (
-        <>
-          <UserInfo userInfo={userInfo} />
-          <PinList listOfPins={listOfPins} />
-        </>
-      ) : (
-        <p>Loading user info...</p>
-      )}
-    </div>
+    <>
+      <Sidebar />
+      <div className="lg:ml-20 bg-white min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          {userInfo ? (
+            <>
+              <UserInfo userInfo={userInfo} />
+              <div className="px-4 md:px-8 pb-8">
+                <PinList listOfPins={listOfPins} />
+              </div>
+            </>
+          ) : (
+            <p className="text-center py-20">Loading user info...</p>
+          )}
+        </div>
+      </div>
+    </>
   );
 }

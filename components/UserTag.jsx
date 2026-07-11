@@ -2,14 +2,25 @@
 import React from 'react'
 import { useSession, signIn, signOut } from "next-auth/react"
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 function UserTag({user}) {
+    const router = useRouter();
     //const {data:session}=useSession();
+    
+    const handleUserClick = () => {
+      if (user?.email) {
+        const encodedEmail = user.email.replace('@', '%40');
+        router.push(`/${encodedEmail}`);
+      }
+    };
+    
   return (
     <div className=''>
        {user?
        <div className='flex gap-3 
-       items-center'>
+       items-center cursor-pointer hover:bg-gray-100 p-2 rounded-full transition'
+       onClick={handleUserClick}>
        <Image src={user.image} 
        alt='userImage'
        width={45}
