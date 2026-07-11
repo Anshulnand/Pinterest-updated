@@ -7,10 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import { collection, getDocs, getDoc, doc, getFirestore, query, where } from 'firebase/firestore';
 
 export default function Profile({ params }) {
-  // Unwrap params synchronously here with React.use()
-  const unwrappedParams = React.use(params);
-  // Now safely access userId param
-  const userId = unwrappedParams?.userId;
+  const userId = params?.userId;
   // Decode email from URL param (replace %40 with @)
   const email = userId?.replace('%40', '@');
 

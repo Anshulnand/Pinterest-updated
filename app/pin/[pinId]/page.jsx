@@ -11,8 +11,7 @@ import { useRouter } from "next/navigation";
 function PinDetail({ params }) {
   const router = useRouter();
   const db = getFirestore(app);
-  const unwrappedParams = React.use(params);  // <-- Unwrap params here
-  const pinId = unwrappedParams.pinId;
+  const pinId = params?.pinId;
 
   const [pinDetail, setPinDetail] = useState(null);
 
