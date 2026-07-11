@@ -4,14 +4,12 @@ import Image from 'next/image'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
 import app from './Shared/firebaseConfig';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import PinList from './../components/Pins/PinList'
 import { useSearchParams } from 'next/navigation'
 import Sidebar from './../components/Sidebar'
 
-export const dynamic = 'force-dynamic'
-
-export default function Home() {
+function HomeContent() {
   const db = getFirestore(app);
   const [listOfPins, setListOfPins] = useState<any[]>([]);
   const [filteredPins, setFilteredPins] = useState<any[]>([]);
@@ -70,5 +68,13 @@ export default function Home() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="lg:ml-20 bg-white min-h-screen flex items-center justify-center">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }
