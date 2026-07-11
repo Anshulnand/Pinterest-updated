@@ -164,3 +164,6 @@ Required variables:
 - `NEXTAUTH_URL` - Full URL of your application
 
 ---
+
+**Note**: Ensure all environment variables are set in Vercel project settings before deployment.
+
