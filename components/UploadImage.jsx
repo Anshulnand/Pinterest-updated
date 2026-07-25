@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { HiArrowUpCircle } from "react-icons/hi2";
 function UploadImage({ setFile }) {

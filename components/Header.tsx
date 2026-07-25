@@ -5,37 +5,42 @@
 "use client"
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useUser, SignInButton, UserButton, useClerk } from "@clerk/nextjs"
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { HiSearch, HiX } from "react-icons/hi";
 import app from "./../app/Shared/firebaseConfig";
 import { useRouter } from 'next/navigation';
 
 function Header() {
-  const { data: session } = useSession();
+  const { user, isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const router = useRouter();
   const db = getFirestore(app);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const name = user?.fullName || user?.firstName || "User";
+  const userImage = user?.imageUrl || "/default-avatar.png";
+
   useEffect(() => {
     saveUserInfo();
-  }, [session])
+  }, [user, isSignedIn])
 
   const saveUserInfo = async () => {
-    if (session?.user && session.user.email) {
-      await setDoc(doc(db, "user", session.user.email), {
-        userName: session.user.name,
-        email: session.user.email,
-        userImage: session.user.image,
+    if (isSignedIn && email) {
+      await setDoc(doc(db, "user", email), {
+        userName: name,
+        email: email,
+        userImage: userImage,
       });
     }
   }
 
   const onCreateClick = () => {
-    if (session) {
+    if (isSignedIn) {
       router.push('/pin-builder')
     } else {
-      signIn()
+      openSignIn()
     }
   }
 
@@ -93,22 +98,24 @@ function Header() {
           )}
         </div>
 
-        {session?.user?.image ? (
-          <Image
-            src={session.user.image ?? "/default-avatar.png"}
-            onClick={() => router.push('/' + (session.user?.email || ''))}
-            alt="user-image"
-            width={44}
-            height={44}
-            className="hover:ring-2 hover:ring-blue-500 rounded-full cursor-pointer transition shrink-0 object-cover"
-          />
+        {isSignedIn ? (
+          <div className="flex items-center gap-3">
+            <Image
+              src={userImage}
+              onClick={() => router.push('/' + (email || ''))}
+              alt="user-image"
+              width={40}
+              height={40}
+              className="hover:ring-2 hover:ring-blue-500 rounded-full cursor-pointer transition shrink-0 object-cover"
+            />
+            <UserButton />
+          </div>
         ) : (
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2.5 px-6 rounded-full transition cursor-pointer shrink-0 text-sm shadow-sm"
-            onClick={() => signIn()}
-          >
-            Login
-          </button>
+          <SignInButton mode="modal">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2.5 px-6 rounded-full transition cursor-pointer shrink-0 text-sm shadow-sm">
+              Login
+            </button>
+          </SignInButton>
         )}
     </div>
   )

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import UploadImage from "./UploadImage";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import UserTag from "./UserTag";
 import app from "./../app/Shared/firebaseConfig";
@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 function Form() {
-  const { data: session } = useSession();
+  const { user } = useUser();
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [link, setLink] = useState("");
@@ -103,9 +103,9 @@ function Form() {
         link: link,
         image: imageUrl,
         category: category || "Wallpapers",
-        userName: session?.user?.name || "Anonymous",
-        email: session?.user?.email || "anonymous@visiongrid.com",
-        userImage: session?.user?.image || "/default-avatar.png",
+        userName: user?.fullName || user?.firstName || "Anonymous",
+        email: user?.primaryEmailAddress?.emailAddress || "anonymous@visiongrid.com",
+        userImage: user?.imageUrl || "/default-avatar.png",
         id: postId,
         createdAt: Date.now(),
       };
@@ -164,7 +164,7 @@ function Form() {
           </div>
           
           <div className="mb-6">
-            <UserTag user={session?.user} />
+            <UserTag user={{ name: user?.fullName || user?.firstName, email: user?.primaryEmailAddress?.emailAddress, image: user?.imageUrl }} />
           </div>
 
           <div className="mb-6">

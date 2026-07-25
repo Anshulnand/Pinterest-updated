@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import UserTag from '../UserTag'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useUser } from '@clerk/nextjs'
 import { deleteDoc, doc, getFirestore } from 'firebase/firestore'
 import app from '../../app/Shared/firebaseConfig'
 import { HiTrash } from 'react-icons/hi2'
 
 function PinItem({pin, onDelete}) {
   const router=useRouter();
-  const { data: session } = useSession();
+  const { user: clerkUser } = useUser();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const user={
@@ -18,7 +18,7 @@ function PinItem({pin, onDelete}) {
     image:pin?.userImage,
   }
 
-  const isOwner = session?.user?.email === pin?.email;
+  const isOwner = clerkUser?.primaryEmailAddress?.emailAddress === pin?.email;
 
   const handleDelete = async (e) => {
     e.stopPropagation(); // prevent opening the pin details

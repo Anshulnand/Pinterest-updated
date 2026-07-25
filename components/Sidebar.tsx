@@ -2,25 +2,27 @@
 import React from 'react'
 import { HiHome, HiPlus, HiUser } from 'react-icons/hi'
 import { useRouter } from 'next/navigation'
-import { useSession, signIn } from 'next-auth/react'
+import { useUser, useClerk } from '@clerk/nextjs'
 
 function Sidebar() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user, isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
 
   const handleCreate = () => {
-    if (session) {
+    if (isSignedIn) {
       router.push('/pin-builder');
     } else {
-      signIn();
+      openSignIn();
     }
   };
 
   const handleProfile = () => {
-    if (session?.user?.email) {
-      router.push('/' + session.user.email);
+    const email = user?.primaryEmailAddress?.emailAddress;
+    if (isSignedIn && email) {
+      router.push('/' + email);
     } else {
-      signIn();
+      openSignIn();
     }
   };
 

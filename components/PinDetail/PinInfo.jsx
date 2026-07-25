@@ -4,14 +4,14 @@ import React, { useState } from 'react'
 import UserTag from '../UserTag'
 import PinActions from './PinActions'
 import PinComments from './PinComments'
-import { useSession } from 'next-auth/react'
+import { useUser } from '@clerk/nextjs'
 import { deleteDoc, doc, getFirestore } from 'firebase/firestore'
 import app from '../../app/Shared/firebaseConfig'
 import { useRouter } from 'next/navigation'
 import { HiTrash } from 'react-icons/hi2'
 
 function PinInfo({pinDetail}) {
-  const { data: session } = useSession();
+  const { user: clerkUser } = useUser();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -22,7 +22,7 @@ function PinInfo({pinDetail}) {
     image:pinDetail.userImage
   }
 
-  const isOwner = session?.user?.email === pinDetail?.email;
+  const isOwner = clerkUser?.primaryEmailAddress?.emailAddress === pinDetail?.email;
   const hasValidLink = pinDetail?.link && pinDetail.link.trim() !== "" && pinDetail.link !== "#";
 
   const handleDelete = async () => {

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs"
 import { collection, getDocs, getFirestore, query, doc, updateDoc } from 'firebase/firestore';
 import app from './Shared/firebaseConfig';
 import { useEffect, useState, Suspense } from 'react';
@@ -47,7 +47,7 @@ function HomeContent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
-  const { data: session } = useSession();
+  const { user, isSignedIn } = useUser();
 
   useEffect(() => {
     getAllPins();
@@ -125,13 +125,17 @@ function HomeContent() {
             </div>
 
             <div className="auth-buttons shrink-0">
-              {session ? (
+              {isSignedIn ? (
                 <div className="flex items-center gap-4">
-                  <button onClick={() => signOut()} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-semibold text-sm transition cursor-pointer">Sign out</button>
-                  <p className="text-gray-600 text-sm hidden md:block">Signed in as {session.user?.email}</p>
+                  <SignOutButton>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-semibold text-sm transition cursor-pointer">Sign out</button>
+                  </SignOutButton>
+                  <p className="text-gray-600 text-sm hidden md:block">Signed in as {user?.primaryEmailAddress?.emailAddress}</p>
                 </div>
               ) : (
-                <button onClick={() => signIn()} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition cursor-pointer">Sign in</button>
+                <SignInButton mode="modal">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition cursor-pointer">Sign in</button>
+                </SignInButton>
               )}
             </div>
           </div>
