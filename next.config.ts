@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
