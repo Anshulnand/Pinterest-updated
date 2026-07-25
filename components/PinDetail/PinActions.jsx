@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { HiHeart, HiOutlineHeart, HiChat, HiUpload, HiDotsHorizontal } from 'react-icons/hi'
+import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
 
 function PinActions({ pinDetail }) {
   const [liked, setLiked] = useState(false);
@@ -15,26 +15,14 @@ function PinActions({ pinDetail }) {
     <div className="flex items-center gap-4 mb-4">
       <button 
         onClick={handleLike}
-        className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-full transition"
+        className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-full transition cursor-pointer"
       >
         {liked ? (
-          <HiHeart className="text-2xl text-red-600" />
+          <HiHeart className="text-2xl text-blue-600" />
         ) : (
           <HiOutlineHeart className="text-2xl text-gray-700" />
         )}
-        <span className="font-semibold">{likeCount}</span>
-      </button>
-      
-      <button className="hover:bg-gray-100 p-2 rounded-full transition">
-        <HiChat className="text-2xl text-gray-700" />
-      </button>
-      
-      <button className="hover:bg-gray-100 p-2 rounded-full transition">
-        <HiUpload className="text-2xl text-gray-700" />
-      </button>
-      
-      <button className="hover:bg-gray-100 p-2 rounded-full transition">
-        <HiDotsHorizontal className="text-2xl text-gray-700" />
+        <span className="font-semibold text-sm text-gray-700">{likeCount}</span>
       </button>
     </div>
   )

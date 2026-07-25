@@ -16,13 +16,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pinterest Clone - Discover and Save Ideas",
-  description: "A Pinterest clone built with Next.js, featuring image discovery, saving, and sharing capabilities.",
-  keywords: ["pinterest", "images", "ideas", "inspiration", "nextjs", "react"],
-  authors: [{ name: "Pinterest Clone" }],
+  title: "VisionGrid - Discover and Share Visual Ideas",
+  description: "VisionGrid is a modern visual discovery platform built with Next.js, featuring image discovery, saving, and sharing capabilities.",
+  keywords: ["visiongrid", "vision grid", "images", "ideas", "inspiration", "nextjs", "react", "visual discovery"],
+  authors: [{ name: "VisionGrid" }],
   openGraph: {
-    title: "Pinterest Clone - Discover and Save Ideas",
-    description: "A Pinterest clone built with Next.js",
+    title: "VisionGrid - Discover and Share Visual Ideas",
+    description: "VisionGrid - A modern visual discovery platform built with Next.js",
     type: "website",
   },
 };

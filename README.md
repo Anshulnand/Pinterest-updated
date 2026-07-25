@@ -1,18 +1,18 @@
-# 📌 Pinterest Clone
+# 👁️ VisionGrid
 
-A full-featured Pinterest Clone built using **Next.js**, **Firebase**, **NextAuth**, and **Tailwind CSS**. Users can **sign in**, **view all posts**, **create their own posts**, and **see their own profile with their pins**.
+A full-featured visual discovery platform built using **Next.js**, **Firebase**, **NextAuth**, and **Tailwind CSS**. Users can **sign in**, **view all posts**, **create their own posts**, and **see their own profile with their vision posts**.
 
 ---
 
 ## 🚀 Features
 
 * 🔐 **Authentication** with [NextAuth.js](https://next-auth.js.org/)
-* ☁️ **Firebase Firestore** for storing pin data
+* ☁️ **Firebase Firestore** for storing pin and post data
 * 🖼️ **Firebase Storage** for uploading images
 * 🎨 **Tailwind CSS** for styling
 * 🧑‍💻 **User Profile** with personal posts
 * 🌐 **Feed Page** with all public posts
-* ➕ **Post Creation** form for uploading new pins
+* ➕ **Post Creation** form for uploading new visual pins
 
 ---
 
@@ -50,8 +50,8 @@ A full-featured Pinterest Clone built using **Next.js**, **Firebase**, **NextAut
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/pinterest-clone.git
-   cd pinterest-clone
+   git clone https://github.com/your-username/vision-grid.git
+   cd vision-grid
    ```
 
 2. **Install dependencies**

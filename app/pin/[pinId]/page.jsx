@@ -9,9 +9,10 @@ import { HiArrowSmallLeft } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 
 function PinDetail({ params }) {
+  const resolvedParams = React.use(params);
   const router = useRouter();
   const db = getFirestore(app);
-  const pinId = params?.pinId;
+  const pinId = resolvedParams?.pinId;
 
   const [pinDetail, setPinDetail] = useState(null);
 

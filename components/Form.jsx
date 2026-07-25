@@ -11,9 +11,23 @@ import Image from "next/image";
 
 function Form() {
   const { data: session } = useSession();
- const [title, setTitle] = useState("");
-const [desc, setDesc] = useState("");
-const [link, setLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [link, setLink] = useState("");
+  const [category, setCategory] = useState("Wallpapers");
+
+  const CATEGORIES = [
+    "Wallpapers",
+    "Design",
+    "Photography",
+    "Technology",
+    "Art",
+    "Nature",
+    "Architecture",
+    "Fashion",
+    "Food",
+    "Other"
+  ];
 
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
@@ -21,59 +35,113 @@ const [link, setLink] = useState("");
   const storage = getStorage(app);
   const db = getFirestore(app);
   const postId = Date.now().toString();
- const onSave = () => {
-  console.log("Title", title, "link", link, "Desc", desc);
-  console.log("File", file);
-  uploadFile(); // Add this line
-};
 
-  const uploadFile = () => {
-    const storageRef = ref(storage, "Pinterest2/" + file.name);
-    uploadBytes(storageRef, file)
-      .then((snapshot) => {
-        console.log("File Uploaded");
-      })
-      .then((resp) => {
-        getDownloadURL(storageRef).then(async (url) => {
-          console.log("DownloadUrl", url);
-          const postData = {
-            title: title,
-            desc: desc,
-            link: link,
-            image: url,
-            userName: session.user.name,
-            email: session.user.email,
-            userImage: session.user.image,
-            id: postId,
-          };
+  const compressImage = (imageFile) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(imageFile);
+      reader.onload = (event) => {
+        const img = document.createElement("img");
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
 
-          await setDoc(doc(db, "pinterest-post", postId), postData).then(
-            (resp) => {
-              console.log("Saved");
-              setLoading(true);
-              router.push("/" + session.user.email);
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
             }
-          );
-        });
-      });
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = () => resolve("https://picsum.photos/seed/" + Date.now() + "/800/1000");
+      };
+      reader.onerror = () => resolve("https://picsum.photos/seed/" + Date.now() + "/800/1000");
+    });
+  };
+
+  const onSave = async () => {
+    if (!title.trim()) {
+      alert("Please add a title for your post.");
+      return;
+    }
+    if (!file) {
+      alert("Please select an image file to upload.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let imageUrl = "";
+
+      // Try uploading to Firebase Storage
+      try {
+        const storageRef = ref(storage, "VisionGrid/" + Date.now() + "-" + file.name);
+        await uploadBytes(storageRef, file);
+        imageUrl = await getDownloadURL(storageRef);
+      } catch (storageErr) {
+        console.warn("Firebase Storage upload failed, compressing image to lightweight Base64 data URL fallback:", storageErr);
+        imageUrl = await compressImage(file);
+      }
+
+      const postData = {
+        title: title,
+        desc: desc,
+        link: link,
+        image: imageUrl,
+        category: category || "Wallpapers",
+        userName: session?.user?.name || "Anonymous",
+        email: session?.user?.email || "anonymous@visiongrid.com",
+        userImage: session?.user?.image || "/default-avatar.png",
+        id: postId,
+        createdAt: Date.now(),
+      };
+
+      await setDoc(doc(db, "pinterest-post", postId), postData);
+      console.log("Post published successfully!");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to publish post:", error);
+      alert("Error publishing post: " + (error?.message || "Please try again."));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg">
       <div className="flex justify-between items-center p-4 border-b">
-        <h1 className="text-xl font-bold">Create Pin</h1>
+        <h1 className="text-xl font-bold">Create Post</h1>
         <button
           onClick={() => onSave()}
-          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-full transition"
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-semibold px-6 py-2 rounded-full transition cursor-pointer flex items-center gap-2"
         >
           {loading ? (
-            <Image
-              src="/loading-indicator.png"
-              width={20}
-              height={20}
-              alt="loading"
-              className="animate-spin"
-            />
+            <>
+              <Image
+                src="/loading-indicator.png"
+                width={18}
+                height={18}
+                alt="loading"
+                className="animate-spin"
+              />
+              <span>Publishing...</span>
+            </>
           ) : (
             <span>Publish</span>
           )}
@@ -98,11 +166,26 @@ const [link, setLink] = useState("");
           <div className="mb-6">
             <UserTag user={session?.user} />
           </div>
+
+          <div className="mb-6">
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 text-sm font-semibold text-gray-800 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
           
           <div className="mb-6">
             <textarea
               onChange={(e) => setDesc(e.target.value)}
-              placeholder="Tell everyone what your pin is about"
+              placeholder="Tell everyone what your post is about"
               className="w-full outline-none text-sm placeholder-gray-400 border-b-2 border-gray-200 focus:border-gray-400 pb-2 resize-none h-24"
             />
           </div>

@@ -32,22 +32,19 @@ function PinComments({ pinDetail }) {
       </div>
       
       <div className="flex items-center gap-2 border-t pt-4">
-        <button className="p-2 hover:bg-gray-100 rounded-full transition">
-          <HiOutlineEmojiHappy className="text-xl text-gray-600" />
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-full transition">
-          <HiOutlinePhotograph className="text-xl text-gray-600" />
-        </button>
         <input
           type="text"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Add a comment"
-          className="flex-1 outline-none text-sm"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleAddComment();
+          }}
+          placeholder="Add a comment..."
+          className="flex-1 bg-gray-100 focus:bg-white text-gray-800 text-sm px-4 py-2.5 rounded-full outline-none border border-transparent focus:border-blue-500 transition-all"
         />
         <button 
           onClick={handleAddComment}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer shrink-0"
         >
           Post
         </button>

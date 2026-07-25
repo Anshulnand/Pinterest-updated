@@ -7,7 +7,8 @@ import Sidebar from '../../components/Sidebar';
 import { collection, getDocs, getDoc, doc, getFirestore, query, where } from 'firebase/firestore';
 
 export default function Profile({ params }) {
-  const userId = params?.userId;
+  const resolvedParams = React.use(params);
+  const userId = resolvedParams?.userId;
   // Decode email from URL param (replace %40 with @)
   const email = userId?.replace('%40', '@');
 
